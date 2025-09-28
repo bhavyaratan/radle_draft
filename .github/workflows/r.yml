@@ -1,0 +1,17 @@
+name: R checks
+on: [push, pull_request]
+jobs:
+  r-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - name: Install system deps
+        run: sudo apt-get update -y && sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
+      - name: Install packages
+        run: Rscript scripts/install_packages.R
+      - name: Validate no leakage
+        run: |
+          mkdir -p data/private
+          test -f data/private/banned_terms.txt || echo "REPLACE_WITH_REAL_BANNED_TERMS" > data/private/banned_terms.txt
+          Rscript scripts/validate_no_leakage.R

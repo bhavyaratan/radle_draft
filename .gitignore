@@ -1,0 +1,23 @@
+# R & renv
+.Rhistory
+.Rproj.user
+.RData
+.Ruserdata
+renv/library/
+renv/staging/
+.Rprofile
+
+# Local-only data & secrets
+data/raw/
+data/private/
+
+# OS/editor
+.DS_Store
+*.swp
+*.swo
+
+# Caches & logs
+*_cache/
+.cache/
+logs/
+tmp/

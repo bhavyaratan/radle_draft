@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: Cite this repository if you use it.
+title: RadLE v1 – Anonymized Results & Analysis
+authors:
+  - name: CRASH Lab (see manuscript for full authorship)
+version: "1.0.0"
+date-released: "2025-09-28"
+license: "MIT (code), CC BY 4.0 (data/figures)"
