@@ -1,23 +1,37 @@
-# R & renv
+# R
 .Rhistory
-.Rproj.user
 .RData
+.Rproj.user/
 .Ruserdata
-renv/library/
-renv/staging/
+.Rcache/
+.Rproj.user
+.Renviron
 .Rprofile
 
-# Local-only data & secrets
-data/raw/
-data/private/
+# renv
+renv/library/
+renv/staging/
+renv/.cache/
+renv.lock.backup
 
-# OS/editor
+# Python (if used incidentally)
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# OS
 .DS_Store
-*.swp
-*.swo
+Thumbs.db
 
-# Caches & logs
-*_cache/
-.cache/
-logs/
-tmp/
+# Data & artifacts (keep small samples only)
+data/raw/*
+!data/raw/README.md
+data/processed/*
+!data/processed/README.md
+models/outputs/*
+!models/outputs/README.md
+results/*
+!results/README.md
+figures/*
+!figures/README.md

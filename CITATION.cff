@@ -1,8 +1,10 @@
 cff-version: 1.2.0
-message: Cite this repository if you use it.
-title: RadLE v1 – Anonymized Results & Analysis
+message: "If you use this repository, please cite it as below."
+title: "Your Project Name"
 authors:
-  - name: CRASH Lab (see manuscript for full authorship)
-version: "1.0.0"
-date-released: "2025-09-28"
-license: "MIT (code), CC BY 4.0 (data/figures)"
+  - family-names: "Last"
+    given-names: "First"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+version: "0.1.0"
+date-released: "2025-01-01"
+license: "MIT"

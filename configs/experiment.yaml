@@ -1,0 +1,43 @@
+# configs/experiment.yaml
+
+# Canonical model labels you'll use across analyses
+canonical_models:
+  - "gemini_2_5_pro"
+  - "chatgpt_o3"
+  - "claude_opus_4_1"
+  - "gpt_5_thinking"
+  - "grok_4"
+
+# Repeatability analysis: Excel workbook with one sheet per model
+repeatability:
+  excel_path: "manuscript/RadArena_CRASH_Lab_Stats_Repeatability.xlsx"  # <- update to your actual file
+
+# Accuracy analysis (Friedman, Wilcoxon, bootstrap CIs)
+accuracy:
+  excel_path: "manuscript/Radiologists_diagnoses_responses.xlsx"        # <- update to your actual file
+  sheet: "Sheet2"
+  # Map rough/variant column names to canonical snake_case labels used below
+  rename_map:
+    "chatgpt[ _-]*0?3": "chatgpt_o3"
+    "claude[ _-]*opus[ _-]*4(\\.1)?": "claude_opus_4_1"
+    "grok[ _-]*4": "grok_4"
+    "gemini[ _-]*2[\\._-]*5[ _-]*pro": "gemini_2_5_pro"
+    "gpt[ _-]*5[ _-]*thinking": "gpt_5_thinking"
+  juniors: ["a","b","c","d"]
+  seniors: ["e","f","g","h"]
+  ai_models: ["gemini_2_5_pro","chatgpt_o3","claude_opus_4_1","gpt_5_thinking","grok_4"]
+
+# Mixed-effects logistic regression
+mixed:
+  excel_path: "manuscript/Radiologists_diagnoses_responses.xlsx"        # <- update to your actual file
+  sheet: "Sheet2"
+  rename_map:
+    "chatgpt[ _-]*0?3": "chatgpt_03"
+    "claude[ _-]*opus[ _-]*4": "claude_opus_4"
+    "grok[ _-]*4": "grok_4"
+    "gemini[ _-]*2[\\._-]*5[ _-]*pro": "gemini_2_5_pro"
+    "gpt[ _-]*5[ _-]*thinking": "gpt_5_thinking"
+  juniors: ["a","b","c","d"]
+  seniors: ["e","f","g","h"]
+  # For mixed model we keep labels exactly as appear after rename_map
+  ai_models: ["gemini_2_5_pro","chatgpt_03","claude_opus_4","gpt_5_thinking","grok_4"]
