@@ -1,101 +1,82 @@
-# Your Project Name
+# Radiology’s Last Exam (RadLE)
+**Benchmarking Frontier Multimodal AI Against Human Experts in Radiology**
 
-A reproducible repository for radiology AI vs. radiologist evaluations, modeled on a modern ML paper layout.
-It includes **R-based analyses** for repeatability, accuracy, and mixed-effects modeling; **CSV model outputs**;
-and **publication-ready figures** with CI workflows.
+## 📖 Overview
+Radiology’s Last Exam (RadLE) is a benchmark designed to rigorously evaluate the diagnostic performance of **generalist multimodal AI systems** against human radiologists. Unlike common public datasets (e.g., CheXpert, MIMIC-CXR) that emphasize frequent pathologies, RadLE focuses on **complex, expert-level “spot diagnosis” cases** encountered in real-world radiology practice.  
 
-## Contents
+This project introduces:  
+- A curated dataset of 50 challenging radiological cases across CT, MRI, and X-ray.  
+- Systematic evaluation of frontier AI models (GPT-5, Gemini 2.5 Pro, ChatGPT-o3, Grok-4, Claude Opus 4.1).  
+- Comparative performance against board-certified radiologists and trainees.  
+- A **taxonomy of visual reasoning errors** to characterize AI diagnostic failures.  
 
-```
-.
-├── .github/workflows/ci.yaml
-├── R/
-│   ├── 00_smoke_check.R
-│   ├── 01_repeatability_analysis.R
-│   ├── 02_accuracy_analysis.R
-│   └── 03_mixed_effects_logistic_regression.R
-├── configs/
-│   └── experiment.yaml
-├── data/
-│   ├── raw/
-│   └── processed/
-├── docs/
-├── figures/
-├── manuscript/
-├── models/
-│   └── outputs/   # your CSVs go here (two sample CSVs included)
-├── notebooks/
-├── results/
-└── scripts/
-```
-
-## Setup (R)
-
-```r
-install.packages("renv")
-renv::init()
-renv::install(c("tidyverse","readr","janitor","here","glue","yaml","lintr","rmarkdown","knitr",
-                 "readxl","irr","rstatix","boot","lme4","reshape2"))
-renv::snapshot()
-```
-
-## Data configuration
-
-Edit `configs/experiment.yaml` and set the file paths to your Excel workbook(s)—these correspond to
-your previously shared files:
-
-- `repeatability.excel_path`: the workbook like **RadArena CRASH Lab Stats Repeatability.xlsx** (one sheet per model).
-- `accuracy.excel_path` and `mixed.excel_path`: the sheet with **Radiologists' diagnoses (Responses)**.
-
-Name normalization is handled with `rename_map` regexes so you can keep original column names and still get
-canonical labels (e.g., `chatgpt_o3`, `claude_opus_4_1`).
-
-## Running analyses
-
-- **Repeatability (ICC + κ)**  
-  ```r
-  source("R/01_repeatability_analysis.R")
-  ```
-
-- **Accuracy (Friedman + Wilcoxon + bootstrap CIs)**  
-  ```r
-  source("R/02_accuracy_analysis.R")
-  ```
-
-- **Mixed-effects logistic regression**  
-  ```r
-  source("R/03_mixed_effects_logistic_regression.R")
-  ```
-
-Outputs:
-- Combined tables: `results/`
-- Figures: `figures/` (from `R/20_make_figures.R` placeholder or your own scripts)
-
-## CSV model outputs
-
-Drop CSVs into `models/outputs/`. I've placed the files you attached here already:
-- `RadLE_LLM_Scoring.csv`
-- `GPT_5_API_Latency_Results.csv`
-
-These aren't used directly by the R scripts above unless you reference them, but they’re versioned and ready.
-
-## Reproducibility & CI
-
-A GitHub Actions workflow runs linting and the basic pipeline. Once your `renv.lock` is created and committed, the CI will be fast and reliable.
-
-## Manuscript
-
-Use `manuscript/` for your LaTeX (e.g., Springer Nature). You can symlink or copy final figures from `figures/` and tables from `results/`.
-
-## Naming improvements
-
-Your original scripts were renamed for clarity and to avoid spaces/special characters:
-- `repeatability tests.R` → `R/01_repeatability_analysis.R`
-- `accuracy analysis.R` → `R/02_accuracy_analysis.R`
-- `MIXED EFFECTS LOGISTIC REGRESSION.R` → `R/03_mixed_effects_logistic_regression.R`
-
-All code now reads paths from `configs/experiment.yaml`, and column names are normalized consistently.
+> **Key finding:** Board-certified radiologists achieved 83% accuracy, compared to 30% for the best-performing AI (GPT-5). This highlights a significant performance gap and the risks of unsupervised clinical use.
 
 ---
 
-*Last updated: 2025-09-28*
+## ✨ Features
+- **Expert-Level Dataset**: 50 curated cases spanning cardiothoracic, gastrointestinal, genitourinary, musculoskeletal, neuro/head & neck, and pediatric systems.  
+- **Benchmarking Protocol**: Evaluations run via web interfaces and API modes for reproducibility.  
+- **Error Taxonomy**: Structured framework covering perceptual, interpretive, and communication errors, plus cognitive bias modifiers.  
+- **Statistical Analysis**: Accuracy, reproducibility, inter-reader reliability, and latency costs assessed systematically.  
+- **Open Science Spirit**: While the dataset is not publicly released to prevent model contamination, external groups may request access for evaluation.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- R (≥ 4.5.0) with required packages:
+  - `lme4` (mixed-effects models)  
+  - `irr` (reliability statistics)  
+  - `ggplot2` (visualizations)  
+
+### Build Instructions
+Clone the repository and open the manuscript draft (`radle.pdf`) for details.  
+Evaluation code and statistical analysis scripts are provided in the repository.
+
+```bash
+git clone https://github.com/<your-org>/radle.git
+cd radle
+```
+
+---
+
+## 📊 Results Summary
+- **Radiologists**: 83% mean accuracy  
+- **Trainees**: 45% mean accuracy  
+- **Best AI (GPT-5)**: 30% mean accuracy  
+- Minimal gains from “high reasoning effort” modes despite significant latency costs.  
+- Error taxonomy shows frequent **under-detection, over-detection, mislocalization, and premature closure** errors in AI reasoning.  
+
+---
+
+## 📑 Citation
+If you use RadLE in your work, please cite:
+
+```
+@article{datta2025radle,
+  title={Radiology’s Last Exam (RadLE): Benchmarking Frontier Multimodal AI Against Human Experts and a Taxonomy of Visual Reasoning Errors in Radiology},
+  author={Datta, Suvrankar and Buchireddygari, Divya and Kaza, Lakshmi Vennela Chowdary and ... and Maroo, Bhavya Ratan and Agrawal, Anurag},
+  journal={Preprint},
+  year={2025}
+}
+```
+
+---
+
+## 🤝 Contributing
+We welcome contributions from radiologists, researchers, and AI developers. You can:  
+- Propose new benchmark cases.  
+- Suggest refinements to the error taxonomy.  
+- Contribute evaluation code or statistical tools.  
+
+Please open a pull request or contact the corresponding authors.
+
+---
+
+## 📬 Contact
+For dataset evaluation requests or collaborations:  
+- Suvrankar Datta – suvrankar.datta@ashoka.edu.in  
+- Divya Buchireddy – divyabuchireddy@gmail.com  
+- CRASH Lab – crashlab.kcdha@gmail.com  

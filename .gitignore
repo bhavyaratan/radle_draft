@@ -4,7 +4,6 @@
 .Rproj.user/
 .Ruserdata
 .Rcache/
-.Rproj.user
 .Renviron
 .Rprofile
 
@@ -14,7 +13,7 @@ renv/staging/
 renv/.cache/
 renv.lock.backup
 
-# Python (if used incidentally)
+# Python
 __pycache__/
 *.pyc
 .venv/
