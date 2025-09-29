@@ -1,26 +1,36 @@
 # R/01_repeatability_analysis.R
 suppressPackageStartupMessages({
-  library(readxl)
+  library(readr)
   library(irr)
   library(yaml)
   library(glue)
   library(dplyr)
 })
 
-read_config <- function(path = "configs/experiment.yaml") yaml::read_yaml(path)
+`%||%` <- function(a, b) if (!is.null(a)) a else b
+
+read_config <- function(path = Sys.getenv("CONFIG_FILE", unset = "configs/experiment.yaml")) yaml::read_yaml(path)
 
 main <- function() {
   cfg <- read_config()
-  file_ai <- cfg$repeatability$excel_path
-  if (is.null(file_ai) || !file.exists(file_ai)) {
-    stop(glue("Repeatability Excel not found at '{file_ai}'. Update configs/experiment.yaml -> repeatability.excel_path"))
+  sources <- cfg$repeatability$csv_sources
+  if (is.null(sources) || length(sources) == 0) {
+    stop("No repeatability CSV sources configured. Update configs/experiment.yaml -> repeatability.csv_sources")
   }
-  ai_sheets <- readxl::excel_sheets(file_ai)
-  for (sh in ai_sheets) {
+  for (src in sources) {
+    file_ai <- src$path
+    sh <- src$name %||% tools::file_path_sans_ext(basename(file_ai))
+    if (is.null(file_ai) || !file.exists(file_ai)) {
+      stop(glue("Repeatability CSV not found at '{file_ai}'. Update configs/experiment.yaml -> repeatability.csv_sources"))
+    }
     cat("\n====================================================\n")
     cat("Model:", sh, "\n")
     cat("====================================================\n")
-    dat <- readxl::read_excel(file_ai, sheet = sh)[, -1, drop = FALSE]
+    dat <- readr::read_csv(file_ai, show_col_types = FALSE)
+    if (ncol(dat) <= 1) {
+      stop(glue("Repeatability CSV '{file_ai}' must contain an identifier column and at least one rater column."))
+    }
+    dat <- dat[, -1, drop = FALSE]
     dat <- as.data.frame(lapply(dat, as.numeric))
     ic <- tryCatch(irr::icc(as.matrix(dat), model = "twoway", type = "agreement", unit = "single"),
                    error = function(e) NULL)

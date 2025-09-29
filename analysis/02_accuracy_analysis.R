@@ -1,10 +1,10 @@
 # R/02_accuracy_analysis.R
 suppressPackageStartupMessages({
-  library(readxl); library(dplyr); library(tidyr); library(rstatix); library(boot)
+  library(readr); library(dplyr); library(tidyr); library(rstatix); library(boot)
   library(janitor); library(yaml); library(glue); library(stringr)
 })
 `%||%` <- function(a, b) if (!is.null(a)) a else b
-read_config <- function(path = "configs/experiment.yaml") yaml::read_yaml(path)
+read_config <- function(path = Sys.getenv("CONFIG_FILE", unset = "configs/experiment.yaml")) yaml::read_yaml(path)
 
 normalize_names <- function(nms, rename_map) {
   cleaned <- nms |> janitor::make_clean_names()
@@ -18,16 +18,15 @@ normalize_names <- function(nms, rename_map) {
 
 main <- function() {
   cfg <- read_config()
-  xlsx_path <- cfg$accuracy$excel_path
-  sheet <- cfg$accuracy$sheet %||% "Sheet2"
+  csv_path <- cfg$accuracy$csv_path
   rename_map <- cfg$accuracy$rename_map
   juniors <- cfg$accuracy$juniors
   seniors <- cfg$accuracy$seniors
   ai_models <- cfg$accuracy$ai_models
-  if (is.null(xlsx_path) || !file.exists(xlsx_path)) {
-    stop(glue("Accuracy Excel not found at '{xlsx_path}'. Update configs/experiment.yaml -> accuracy.excel_path"))
+  if (is.null(csv_path) || !file.exists(csv_path)) {
+    stop(glue("Accuracy CSV not found at '{csv_path}'. Update configs/experiment.yaml -> accuracy.csv_path"))
   }
-  raw <- readxl::read_excel(xlsx_path, sheet = sheet)
+  raw <- readr::read_csv(csv_path, show_col_types = FALSE)
   names(raw) <- normalize_names(names(raw), rename_map)
   expect_cols <- c("case_id", juniors, seniors, ai_models)
   missing <- setdiff(expect_cols, names(raw))

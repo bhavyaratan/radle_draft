@@ -1,22 +1,21 @@
 # R/03_mixed_effects_logistic_regression.R
 suppressPackageStartupMessages({
-  library(readxl); library(dplyr); library(reshape2); library(lme4); library(yaml); library(glue); library(janitor)
+  library(readr); library(dplyr); library(reshape2); library(lme4); library(yaml); library(glue); library(janitor)
 })
 `%||%` <- function(a, b) if (!is.null(a)) a else b
-read_config <- function(path = "configs/experiment.yaml") yaml::read_yaml(path)
+read_config <- function(path = Sys.getenv("CONFIG_FILE", unset = "configs/experiment.yaml")) yaml::read_yaml(path)
 
 main <- function() {
   cfg <- read_config()
-  xlsx_path <- cfg$mixed$excel_path
-  sheet <- cfg$mixed$sheet %||% "Sheet2"
+  csv_path <- cfg$mixed$csv_path
   juniors <- cfg$mixed$juniors
   seniors <- cfg$mixed$seniors
   ai_models <- cfg$mixed$ai_models
   rename_map <- cfg$mixed$rename_map
-  if (is.null(xlsx_path) || !file.exists(xlsx_path)) {
-    stop(glue("Mixed-effects Excel not found at '{xlsx_path}'. Update configs/experiment.yaml -> mixed.excel_path"))
+  if (is.null(csv_path) || !file.exists(csv_path)) {
+    stop(glue("Mixed-effects CSV not found at '{csv_path}'. Update configs/experiment.yaml -> mixed.csv_path"))
   }
-  df <- readxl::read_excel(xlsx_path, sheet = sheet)
+  df <- readr::read_csv(csv_path, show_col_types = FALSE)
   names(df) <- janitor::make_clean_names(names(df))
   if (!is.null(rename_map) && length(rename_map) > 0) {
     cn <- names(df)

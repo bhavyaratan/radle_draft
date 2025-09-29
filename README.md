@@ -27,18 +27,66 @@ This project introduces:
 
 ### Prerequisites
 - R (≥ 4.5.0) with required packages:
-  - `lme4` (mixed-effects models)  
-  - `irr` (reliability statistics)  
-  - `ggplot2` (visualizations)  
+  - `boot`
+  - `dplyr`
+  - `irr`
+  - `janitor`
+  - `lme4`
+  - `readr`
+  - `rstatix`
+  - `stringr`
+  - `tidyr`
 
-### Build Instructions
-Clone the repository and open the manuscript draft (`radle.pdf`) for details.  
+Install them once using:
+
+```r
+install.packages(c("boot", "dplyr", "irr", "janitor", "lme4", "readr", "rstatix", "stringr", "tidyr"))
+```
+
+### Repository Setup
+Clone the repository and open the manuscript draft (`radle.pdf`) for details.
 Evaluation code and statistical analysis scripts are provided in the repository.
 
 ```bash
 git clone https://github.com/<your-org>/radle.git
 cd radle
 ```
+
+### Configure Your CSV Data Sources
+The analysis scripts now load comma-separated value (CSV) files that you control via `configs/experiment.yaml`. A set of placeholder CSV files is provided in `data/` so that the scripts run end-to-end; replace them with your own measurements while keeping the same column structure.
+
+1. Copy the example configuration if you wish to start from a clean file:
+   ```bash
+   cp configs/experiment.yaml configs/experiment.local.yaml
+   ```
+   (Optional, but helps you version your local changes.)
+2. Edit the configuration to point to your CSV files and list the columns that correspond to junior readers, senior readers, and AI models. For example:
+   ```yaml
+   accuracy:
+     csv_path: data/my_accuracy_scores.csv
+     rename_map: {"Senior Reader 1": senior_1}
+     juniors: [junior_1, junior_2]
+     seniors: [senior_1, senior_2]
+     ai_models: [ai_model]
+   ```
+3. Ensure each referenced CSV uses UTF-8 encoding and contains a `case_id` column followed by the reader/model score columns required by each script.
+
+### Running the Analyses
+Execute each R script from the repository root (so relative paths to the config and data files resolve correctly):
+
+```bash
+Rscript analysis/01_repeatability_analysis.R
+Rscript analysis/02_accuracy_analysis.R
+Rscript analysis/03_mixed_effects_logistic_regression.R
+```
+
+Each script reads the configuration file at `configs/experiment.yaml` by default. Set the `CONFIG_FILE` environment variable if you prefer to use an alternate YAML file:
+
+```bash
+CONFIG_FILE=configs/experiment.local.yaml Rscript analysis/02_accuracy_analysis.R
+```
+
+Refer to the inline comments within `configs/experiment.yaml` for guidance on the expected column groupings and placeholder file names.
 
 ---
 
