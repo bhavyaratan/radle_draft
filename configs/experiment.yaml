@@ -1,0 +1,29 @@
+# Update the paths below to point to your CSV files. The placeholder entries
+# match the example CSVs located in data/.
+
+repeatability:
+  csv_sources:
+    - name: Example_Model_A
+      path: data/repeatability_model_a.csv
+accuracy:
+  csv_path: data/accuracy_example.csv
+  rename_map: {}
+  juniors:
+    - junior_1
+    - junior_2
+  seniors:
+    - senior_1
+    - senior_2
+  ai_models:
+    - ai_model
+mixed:
+  csv_path: data/accuracy_example.csv
+  rename_map: {}
+  juniors:
+    - junior_1
+    - junior_2
+  seniors:
+    - senior_1
+    - senior_2
+  ai_models:
+    - ai_model
